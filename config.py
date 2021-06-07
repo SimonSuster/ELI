@@ -1,3 +1,2 @@
-TOP = '/home/ben/Desktop/evidence_extraction/'
-SCI_BERT_DIR = '/home/ben/Desktop/scibert_scivocab_uncased/'
-BIO_BERT_DIR = '/home/ben/Desktop/biobert_pubmed/'
+BIO_BERT_DIR = 'models/bert_configs/biobert_pubmed'
+SCI_BERT_DIR = 'models/bert_configs/scibert_scivocab_uncased'

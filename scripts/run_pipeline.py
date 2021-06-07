@@ -40,6 +40,9 @@ For an example of what to do with this dict once you've finished generating it, 
 BERT / Tensorflow stuff
 """
 
+BIO_BERT_DIR = os.path.join(os.getcwd(), '..', 'models', 'bert_configs', 'biobert_pubmed')
+SCI_BERT_DIR = os.path.join(os.getcwd(), '..', 'models', 'bert_configs', 'scibert_scivocab_uncased')
+
 NER_OUTPUT = 'pred.txt'
 
 bert_model_top = '../models/sentence_classifier/'
@@ -83,9 +86,9 @@ def exec_phase1_ner(top, cp = 'ebm_nlp_ab3p'):
 	ner_model.FLAGS.model_dir        = '{}/data/{}/model/'.format(ner_model_top, cp)
 	ner_model.FLAGS.do_lower_case    = True
 	ner_model.FLAGS.label_idx = 1 # target label column idx
-	ner_model.FLAGS.vocab_file       = '{}/vocab.txt'.format(config.BIO_BERT_DIR)
-	ner_model.FLAGS.bert_config_file = '{}/bert_config.json'.format(config.BIO_BERT_DIR)
-	ner_model.FLAGS.init_checkpoint  = '{}'.format(config.BIO_BERT_DIR)
+	ner_model.FLAGS.vocab_file       = '{}/vocab.txt'.format(BIO_BERT_DIR)
+	ner_model.FLAGS.bert_config_file = '{}/bert_config.json'.format(BIO_BERT_DIR)
+	ner_model.FLAGS.init_checkpoint  = '{}'.format(BIO_BERT_DIR)
 	ner_model.main('')
 	# TODO - push output fname to FLAGS so you don't have to know this
 	src_fname = os.path.join(ner_model.FLAGS.output_dir, NER_OUTPUT)
@@ -103,9 +106,9 @@ def exec_phase1_ev(top, cp = 'ev_sent'):
 	model.FLAGS.data_dir         = '{}/ev/'.format(top)
 	model.FLAGS.output_dir       = '{}/ev/results/'.format(top)
 	model.FLAGS.model_dir        = '{}/data/{}/model/'.format(bert_model_top, cp)
-	model.FLAGS.vocab_file       = '{}/vocab.txt'.format(config.BIO_BERT_DIR)
-	model.FLAGS.bert_config_file = '{}/bert_config.json'.format(config.BIO_BERT_DIR)
-	model.FLAGS.init_checkpoint  = '{}'.format(config.BIO_BERT_DIR)
+	model.FLAGS.vocab_file       = '{}/vocab.txt'.format(BIO_BERT_DIR)
+	model.FLAGS.bert_config_file = '{}/bert_config.json'.format(BIO_BERT_DIR)
+	model.FLAGS.init_checkpoint  = '{}'.format(BIO_BERT_DIR)
 	# TODO - push output fname to FLAGS so you don't have to know this
 	src_fname = os.path.join(model.FLAGS.output_dir, 'test_results.tsv')
 	bak_fname = os.path.join(model.FLAGS.output_dir, '{}.test_results.tsv'.format(cp))
@@ -163,9 +166,9 @@ def exec_phase2_o_ev(top, cp = 'o_ev_sent'):
 	model.FLAGS.data_dir         = '{}/o_frame/'.format(top)
 	model.FLAGS.output_dir       = '{}/o_frame/results/'.format(top)
 	model.FLAGS.model_dir        = '{}/data/{}/model/'.format(bert_model_top, cp)
-	model.FLAGS.vocab_file       = '{}/vocab.txt'.format(config.BIO_BERT_DIR)
-	model.FLAGS.bert_config_file = '{}/bert_config.json'.format(config.BIO_BERT_DIR)
-	model.FLAGS.init_checkpoint  = '{}'.format(config.BIO_BERT_DIR)
+	model.FLAGS.vocab_file       = '{}/vocab.txt'.format(BIO_BERT_DIR)
+	model.FLAGS.bert_config_file = '{}/bert_config.json'.format(BIO_BERT_DIR)
+	model.FLAGS.init_checkpoint  = '{}'.format(BIO_BERT_DIR)
 	model.FLAGS.do_lower_case    = True
 	model.main('')
 
@@ -181,9 +184,9 @@ def exec_phase2_ic_ev(top, cp = 'i_c_abst'):
 	model.FLAGS.data_dir         = '{}/ic_frame/'.format(top)
 	model.FLAGS.output_dir       = '{}/ic_frame/results/'.format(top)
 	model.FLAGS.model_dir        = '{}/data/{}/model/'.format(bert_model_top, cp)
-	model.FLAGS.vocab_file       = '{}/vocab.txt'.format(config.SCI_BERT_DIR)
-	model.FLAGS.bert_config_file = '{}/bert_config.json'.format(config.SCI_BERT_DIR)
-	model.FLAGS.init_checkpoint  = '{}'.format(config.SCI_BERT_DIR)
+	model.FLAGS.vocab_file       = '{}/vocab.txt'.format(SCI_BERT_DIR)
+	model.FLAGS.bert_config_file = '{}/bert_config.json'.format(SCI_BERT_DIR)
+	model.FLAGS.init_checkpoint  = '{}'.format(SCI_BERT_DIR)
 	model.FLAGS.do_lower_case    = True
 	model.main('')
 
