@@ -1,3 +1,4 @@
+import argparse
 import sys, os, json
 from imp import reload
 import tensorflow as tf
@@ -200,11 +201,9 @@ def load_phase2_ic_ev(top, docs):
 		print('\t\tloading ic_frame outputs...')
 		processing.add_ic_ev_output(docs, 'test', '{}/ic_frame/'.format(top))
 
-def run_example(data_fname = 'sample_data.json', output_fname = 'sample_data_parsed.json'):
+def run_example(data_fname, output_fname, top):
 	data = json.load(open(data_fname))
 	docs = process_trialstreamer.process_generic_data(data)
-	# NOTE: we need an absolute path here since running models will chdir
-	top = os.path.join(os.getcwd(), '..', 'data', 'example')
 	run_eli(docs, top)
 	processing.add_predicted_frames(docs)
 	process_trialstreamer.add_minimap_terms(docs)
@@ -223,6 +222,7 @@ def load_trialstreamer_shard(top, docs = None):
 	return docs
 
 def run_eli(docs, top = '../data/tmp/'):
+	# identify PIO
 	dump_phase1_ner(top, docs)
 	exec_phase1_ner(top, 'ebm_p')
 	load_phase1_ner(top, docs, 'ebm_p')
@@ -231,17 +231,29 @@ def run_eli(docs, top = '../data/tmp/'):
 	exec_phase1_ner(top, 'ebm_o')
 	load_phase1_ner(top, docs, 'ebm_o')
 
+	# identify evidence-bearing sentences
 	dump_phase1_ev(top, docs)
 	exec_phase1_ev(top)
 	load_phase1_ev(top, docs)
-	
+
+	# identify effect directionality of each O in a given ev
+	# note that knowing I is not needed as it almost doesn't affect the predictions
 	dump_phase2_o_ev(top, docs)
 	exec_phase2_o_ev(top)
 	load_phase2_o_ev(top, docs)
 
+	# is I primary I, C or unrelated
+	# linking: select the most probable intervention mention for a given ev
 	dump_phase2_ic_ev(top, docs)
 	exec_phase2_ic_ev(top)
 	load_phase2_ic_ev(top, docs)
 
+
 if __name__ == '__main__':
-	run_example(sys.argv[1], sys.argv[2])
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-data_fname", default="/home/ssuster/ELI/data/sample_data.json")
+	parser.add_argument('-output_fname', default="/home/ssuster/ELI/data/sample_data_parsed.json")
+	parser.add_argument('-top', default="/home/ssuster/ELI/data/")
+	args = parser.parse_args()
+
+	run_example(args.data_fname, args.output_fname, args.top)
